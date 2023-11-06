@@ -1,0 +1,75 @@
+{
+  "name": "@datadayrepos/popperts",
+  "type": "module",
+  "version": "0.0.1-beta.1",
+  "private": false,
+  "packageManager": "pnpm@8.9.0",
+  "description": "TS port of good old popper, also internalized all external dependencies",
+  "author": "IS",
+  "license": "MIT",
+  "homepage": "https://github.com/datadayrepos/popperTS#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/datadayrepos/popperTS.git"
+  },
+  "bugs": {
+    "url": "https://github.com/datadayrepos/popperTS/issues"
+  },
+  "keywords": [
+    "javascript",
+    "typescript",
+    "popper",
+    "utilities"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*",
+        "./dist/index.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "lint": "eslint --cache .",
+    "lint:fix": "eslint . --fix",
+    "release": "bumpp -r && pnpm -r publish",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc",
+    "pub": "npm publish --access public"
+  },
+  "devDependencies": {
+    "@datadayrepos/eslint-config": "^1.0.1-beta.11",
+    "@datadayrepos/eslint-plugin-datadayrepos": "1.0.0-Beta12",
+    "@datadayrepos/ni": "^0.21.8",
+    "@types/node": "^20.8.3",
+    "eslint": "^8.51.0",
+    "eslint-plugin-sort-keys": "^2.3.5",
+    "esno": "^0.17.0",
+    "lint-staged": "^14.0.1",
+    "pnpm": "^8.8.0",
+    "rimraf": "^5.0.5",
+    "simple-git-hooks": "^2.9.0",
+    "typescript": "^5.2.2",
+    "unbuild": "^2.0.0",
+    "vite": "^4.4.11"
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx,vue,md}": [
+      "eslint --cache --fix"
+    ]
+  }
+}
