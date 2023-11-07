@@ -1,15 +1,16 @@
-import getNodeName from '../dom-utils/getNodeName.js'
-import { isHTMLElement } from '../dom-utils/instanceOf.js'
+import getNodeName from '../dom-utils/getNodeName'
+import { isHTMLElement } from '../dom-utils/instanceOf'
 
-import type { Modifier, ModifierArguments } from '../types'
+import type { Modifier, ModifierArguments, State, VirtualElement } from '../types/types'
 
 // This modifier takes the styles prepared by the `computeStyles` modifier
 // and applies them to the HTMLElements such as popper and arrow
-function applyStyles({ state }: ModifierArguments<object>) {
+function applyStyles({ state }: ModifierArguments<State>) {
   Object.keys(state.elements).forEach((name) => {
     const style = state.styles[name] || {}
     const attributes = state.attributes[name] || {}
-    const element = state.elements[name] // arrow is optional + virtual elements
+
+    const element = state.elements[name as keyof typeof state.elements] as HTMLElement | undefined
 
     if (!isHTMLElement(element) || !getNodeName(element))
       return
@@ -29,8 +30,11 @@ function applyStyles({ state }: ModifierArguments<object>) {
   })
 }
 
-function effect({ state }: ModifierArguments<object>) {
-  const initialStyles = {
+// eslint-disable-next-line ts/consistent-type-definitions
+type StyleObject = { [key: string]: string }
+
+function effect({ state }: ModifierArguments<State>) {
+  const initialStyles: { [key: string]: any } = {
     arrow: {
       position: 'absolute',
     },
@@ -51,18 +55,21 @@ function effect({ state }: ModifierArguments<object>) {
 
   return function () {
     Object.keys(state.elements).forEach((name) => {
-      const element = state.elements[name]
+      const element = state.elements[name as keyof typeof state.elements] as HTMLElement | undefined
       const attributes = state.attributes[name] || {}
       const styleProperties = Object.keys(
-        state.styles.hasOwnProperty(name)
+        Object.prototype.hasOwnProperty.call(state.styles, name)
           ? state.styles[name]
           : initialStyles[name],
       ) // Set all values to an empty string to unset them
 
-      const style = styleProperties.reduce((style, property) => {
-        style[property] = ''
-        return style
-      }, {}) // arrow is optional + virtual elements
+      // Ensure that the empty object has a string index signature.
+      // Define a type for the style object with a string index signature
+
+      const style: StyleObject = styleProperties.reduce((acc: StyleObject, property: string) => {
+        acc[property] = ''
+        return acc
+      }, {} as StyleObject) // Cast the initial value to StyleObject
 
       if (!isHTMLElement(element) || !getNodeName(element))
         return

@@ -1,13 +1,13 @@
 import applyStyles from './modifiers/applyStyles'
-import arrow from './modifiers/arrow.js'
+import arrow from './modifiers/arrow'
 import computeStyles from './modifiers/computeStyles'
 import eventListeners from './modifiers/eventListeners'
-import flip from './modifiers/flip.js'
-import hide from './modifiers/hide.js'
-import offset from './modifiers/offset.js'
+import flip from './modifiers/flip'
+import hide from './modifiers/hide'
+import offset from './modifiers/offset'
 import { detectOverflow, popperGenerator } from './createPopper'
 import popperOffsets from './modifiers/popperOffsets'
-import preventOverflow from './modifiers/preventOverflow.js'
+import preventOverflow from './modifiers/preventOverflow'
 
 import type {
   ApplyStylesModifier,
@@ -19,7 +19,7 @@ import type {
   OffsetModifier,
   PopperOffsetsModifier,
   PreventOverflowModifier,
-} from './types'
+} from './types/types'
 
 // export type * from "./types";
 
@@ -43,6 +43,6 @@ const createPopper = popperGenerator({
 
 export { createPopper, popperGenerator, defaultModifiers, detectOverflow }
 
-// export { createPopper as createPopperLite } from "./popper-lite.js";
+// export { createPopper as createPopperLite } from "./popper-lite";
 
 export * from './modifiers'

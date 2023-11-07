@@ -1,4 +1,4 @@
-import type { Modifier, Offsets, PositioningStrategy, Rect } from '../types'
+import type { Modifier, Offsets, PositioningStrategy, Rect } from '../types/types'
 import type { BasePlacement, Variation } from '../enums'
 
 export declare type RoundOffsets = (

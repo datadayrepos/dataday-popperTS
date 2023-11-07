@@ -1,4 +1,4 @@
-import type { Window } from '../types'
+import type { Window } from '../types/types'
 import getWindowScroll from './getWindowScroll'
 import getWindow from './getWindow'
 import { isHTMLElement } from './instanceOf'

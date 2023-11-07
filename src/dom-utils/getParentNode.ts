@@ -17,9 +17,8 @@ export default function getParentNode(element: Node | ShadowRoot): Node {
 
   return (
     (isElementLocal(element) && element.assignedSlot) // step into the shadow DOM of the parent of a slotted node
-        || element.parentNode // DOM Element detected
-        || (isShadowRootLocal(element) ? element.host : null) // ShadowRoot detected
-        // $FlowFixMe[incompatible-call]: HTMLElement is a Node
-        || getDocumentElement(element) // fallback
+      || element.parentNode // DOM Element detected
+      || (isShadowRootLocal(element) ? element.host : null) // ShadowRoot detected
+      || (isElementLocal(element) ? getDocumentElement(element) : document.documentElement) // fallback
   )
 }

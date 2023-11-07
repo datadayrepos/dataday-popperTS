@@ -1,6 +1,6 @@
-import computeOffsets from '../utils/computeOffsets.js'
+import computeOffsets from '../utils/computeOffsets'
 
-import type { Modifier, ModifierArguments } from '../types'
+import type { Modifier, ModifierArguments } from '../types/types'
 
 function popperOffsets({ state, name }: ModifierArguments<object>) {
   // Offsets are the actual position the popper needs to have to be

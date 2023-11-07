@@ -1,5 +1,5 @@
 import { round } from '../utils/math'
-import type { ClientRectObject, VirtualElement } from '../types'
+import type { ClientRectObject, VirtualElement } from '../types/types'
 import { isElement, isHTMLElement } from './instanceOf'
 import getWindow from './getWindow'
 import isLayoutViewport from './isLayoutViewport'

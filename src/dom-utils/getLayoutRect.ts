@@ -1,4 +1,4 @@
-import type { Rect } from '../types'
+import type { Rect } from '../types/types'
 
 import getBoundingClientRect from './getBoundingClientRect'
 

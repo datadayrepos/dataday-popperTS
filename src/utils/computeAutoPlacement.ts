@@ -2,17 +2,17 @@ import {
   placements as allPlacements,
   basePlacements,
   variationPlacements,
-} from '../enums.js'
-import type { Padding, State } from '../types'
+} from '../enums'
+import type { Padding, State } from '../types/types'
 import type {
   Boundary,
   ComputedPlacement,
   Placement,
   RootBoundary,
 } from '../enums'
-import getVariation from './getVariation.js'
-import detectOverflow from './detectOverflow.js'
-import getBasePlacement from './getBasePlacement.js'
+import getVariation from './getVariation'
+import detectOverflow from './detectOverflow'
+import getBasePlacement from './getBasePlacement'
 
 type OverflowsMap = { [K in ComputedPlacement]: number }
 
@@ -27,10 +27,10 @@ interface Options {
 
 export default function computeAutoPlacement(
   state: Partial<State>,
-  options: Options = {},
+  options: Partial<Options> = {},
 ): Array<ComputedPlacement> {
   const {
-    placement,
+    placement = 'bottom', // default placement if undefined
     boundary,
     rootBoundary,
     padding,
@@ -68,19 +68,19 @@ export default function computeAutoPlacement(
     }
   } // $FlowFixMe[incompatible-type]: Flow seems to have problems with two array unions...
 
-  const overflows: OverflowsMap = allowedPlacements.reduce((
-    acc,
-    placement,
-  ) => {
-    acc[placement] = detectOverflow(state, {
+  // Explicitly define the type of the accumulator
+  const overflows: OverflowsMap = allowedPlacements.reduce((acc: OverflowsMap, placement) => {
+    acc[placement as ComputedPlacement] = detectOverflow(state, {
+    // assert placement as ComputedPlacement if needed
       boundary,
       padding,
       placement,
       rootBoundary,
     })[getBasePlacement(placement)]
     return acc
-  }, {})
-  return Object.keys(overflows).sort((a, b) => {
-    return overflows[a] - overflows[b]
-  })
+  }, {} as OverflowsMap) // type assertion here
+
+  return Object.keys(overflows)
+    .sort((a, b) => overflows[a as ComputedPlacement] - overflows[b as ComputedPlacement])
+    .map(key => key as ComputedPlacement) // Cast each key to ComputedPlacement
 }

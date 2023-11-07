@@ -1,7 +1,7 @@
 {
   "name": "@datadayrepos/popperts",
   "type": "module",
-  "version": "0.0.1-beta.1",
+  "version": "0.0.1-beta.2",
   "private": false,
   "packageManager": "pnpm@8.9.0",
   "description": "TS port of good old popper, also internalized all external dependencies",
@@ -21,26 +21,20 @@
     "popper",
     "utilities"
   ],
+  "sideEffects": false,
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
     }
   },
   "main": "./dist/index.mjs",
   "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
-  "typesVersions": {
-    "*": {
-      "*": [
-        "./dist/*",
-        "./dist/index.d.ts"
-      ]
-    }
-  },
+  "types": "./dist/types/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "dist/types"
   ],
   "scripts": {
     "lint": "eslint --cache .",

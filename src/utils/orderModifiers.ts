@@ -1,10 +1,10 @@
-import { modifierPhases } from '../enums.js' // source: https://stackoverflow.com/questions/49875255
-import type { Modifier } from '../types'
+import { modifierPhases } from '../enums' // source: https://stackoverflow.com/questions/49875255
+import type { Modifier } from '../types/types'
 
-function order(modifiers) {
-  const map = new Map()
-  const visited = new Set()
-  const result = []
+function order(modifiers: Modifier<string, object>[]) {
+  const map = new Map<string, Modifier<string, object>>()
+  const visited = new Set<string>()
+  const result: Modifier<string, object>[] = []
   modifiers.forEach((modifier) => {
     map.set(modifier.name, modifier)
   }) // On visiting object, check for its dependencies and visit them recursively
@@ -44,7 +44,7 @@ export default function orderModifiers(
   const orderedModifiers = order(modifiers)
 
   // order based on phase
-  return modifierPhases.reduce((acc, phase) => {
+  return modifierPhases.reduce<Array<Modifier<any, any>>>((acc, phase) => {
     return acc.concat(
       orderedModifiers.filter(modifier => modifier.phase === phase),
     )

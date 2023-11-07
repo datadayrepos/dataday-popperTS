@@ -1,4 +1,4 @@
-import type { Padding, PositioningStrategy, SideObject, State } from '../types'
+import type { Padding, PositioningStrategy, SideObject, State } from '../types/types'
 import type { Boundary, Context, Placement, RootBoundary } from '../enums'
 
 export declare interface Options {

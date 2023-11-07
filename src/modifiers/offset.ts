@@ -1,7 +1,7 @@
-import getBasePlacement from '../utils/getBasePlacement.js'
-import { left, placements, right, top } from '../enums.js'
+import getBasePlacement from '../utils/getBasePlacement'
+import { left, placements, right, top } from '../enums'
 import type { Placement } from '../enums'
-import type { Modifier, ModifierArguments, Offsets, Rect } from '../types'
+import type { Modifier, ModifierArguments, Offsets, Rect } from '../types/types'
 
 export interface Options {
   offset: Offsets

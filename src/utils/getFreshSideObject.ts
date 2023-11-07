@@ -1,4 +1,4 @@
-import type { SideObject } from '../types'
+import type { SideObject } from '../types/types'
 
 export default function getFreshSideObject(): SideObject {
   return {

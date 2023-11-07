@@ -1,4 +1,4 @@
-import type { PositioningStrategy } from '../types'
+import type { PositioningStrategy } from '../types/types'
 import getWindow from './getWindow'
 import getDocumentElement from './getDocumentElement'
 import getWindowScrollBarX from './getWindowScrollBarX'

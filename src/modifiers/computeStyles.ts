@@ -1,16 +1,18 @@
-import { bottom, end, left, right, top } from '../enums.js'
-import getOffsetParent from '../dom-utils/getOffsetParent.js'
-import getWindow from '../dom-utils/getWindow.js'
-import getDocumentElement from '../dom-utils/getDocumentElement.js'
-import getComputedStyle from '../dom-utils/getComputedStyle.js'
-import getBasePlacement from '../utils/getBasePlacement.js'
-import getVariation from '../utils/getVariation.js'
-import { round } from '../utils/math.js'
+import type { BasePlacement, Placement, Variation } from '../enums'
+import { bottom, end, left, right, top } from '../enums'
+import getOffsetParent from '../dom-utils/getOffsetParent'
+import getWindow from '../dom-utils/getWindow'
+import getDocumentElement from '../dom-utils/getDocumentElement'
+import getComputedStyle from '../dom-utils/getComputedStyle'
+import getBasePlacement from '../utils/getBasePlacement'
+import getVariation from '../utils/getVariation'
+import { round } from '../utils/math'
 
 import type {
   Modifier,
   Offsets,
-} from '../types'
+  State,
+} from '../types/types'
 
 export type RoundOffsets = (
   offsets: Partial<{
@@ -20,7 +22,7 @@ export type RoundOffsets = (
   }>
 ) => Offsets
 
-export interface Options {
+interface Options {
   gpuAcceleration: boolean
   adaptive: boolean
   roundOffsets?: boolean | RoundOffsets
@@ -36,7 +38,7 @@ const unsetSides = {
 // Round the offsets to the nearest suitable subpixel based on the DPR.
 // Zooming can change the DPR, but it seems to report a value that will
 // cleanly divide the values into the appropriate subpixels.
-function roundOffsetsByDPR({ x, y }): Offsets {
+function roundOffsetsByDPR({ x, y }: { x: number; y: number }): Offsets {
   const win = window
   const dpr = win.devicePixelRatio || 1
   return {
@@ -45,8 +47,21 @@ function roundOffsetsByDPR({ x, y }): Offsets {
   }
 }
 
-export function mapToStyles(_ref2) {
-  let _Object$assign2
+type StyleSides = 'top' | 'right' | 'bottom' | 'left'
+
+// Mapped type for the sides
+interface StyleProperties {
+  position?: string
+  transform?: string
+}
+
+// Extend the mapped type with additional properties
+type Styles = {
+  [key in StyleSides]?: string;
+} & StyleProperties
+
+export function mapToStyles(_ref2: { gpuAcceleration: any; isFixed: boolean; placement: BasePlacement; popper: any; popperRect: any; variation: Variation | null | undefined } & { adaptive: any; offsets: any; position: any; roundOffsets: any }) {
+  let _Object$assign2: Partial<Styles> = {}
 
   const popper = _ref2.popper
   const popperRect = _ref2.popperRect
@@ -76,10 +91,11 @@ export function mapToStyles(_ref2) {
 
   x = _ref3.x
   y = _ref3.y
-  const hasX = offsets.hasOwnProperty('x')
-  const hasY = offsets.hasOwnProperty('y')
-  let sideX = left
-  let sideY = top
+  const hasX = Object.prototype.hasOwnProperty.call(offsets, 'x')
+  const hasY = Object.prototype.hasOwnProperty.call(offsets, 'y')
+
+  let sideX: 'left' | 'right' = 'left'
+  let sideY: 'top' | 'bottom' = 'top'
   const win = window
 
   if (adaptive) {
@@ -99,7 +115,7 @@ export function mapToStyles(_ref2) {
       }
     } // $FlowFixMe[incompatible-cast]: force type refinement, we compare offsetParent with window above, but Flow doesn't detect it
 
-    offsetParent = offsetParent
+    // offsetParent = offsetParent
 
     if (
       placement === top
@@ -128,7 +144,7 @@ export function mapToStyles(_ref2) {
     }
   }
 
-  const commonStyles = Object.assign(
+  const commonStyles: Styles = Object.assign(
     {
       position,
     },
@@ -150,7 +166,7 @@ export function mapToStyles(_ref2) {
   y = _ref4.y
 
   if (gpuAcceleration) {
-    let _Object$assign
+    let _Object$assign: Partial<Styles> = {}
 
     return Object.assign(
       {},
@@ -177,7 +193,7 @@ export function mapToStyles(_ref2) {
   )
 }
 
-function computeStyles(_ref5) {
+function computeStyles(_ref5: { state: State; options: Options }) {
   const state = _ref5.state
   const options = _ref5.options
   const _options$gpuAccelerat = options.gpuAcceleration
@@ -216,10 +232,12 @@ function computeStyles(_ref5) {
     }
   }
 
+  const basePlacement = getBasePlacement(state.placement) as BasePlacement
+
   const commonStyles = {
     gpuAcceleration,
     isFixed: state.options.strategy === 'fixed',
-    placement: getBasePlacement(state.placement),
+    placement: basePlacement,
     popper: state.elements.popper,
     popperRect: state.rects.popper,
     variation: getVariation(state.placement),

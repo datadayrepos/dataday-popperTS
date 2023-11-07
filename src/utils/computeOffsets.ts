@@ -1,14 +1,14 @@
-import { bottom, end, left, right, start, top } from '../enums.js'
+import { bottom, end, left, right, start, top } from '../enums'
 import type {
   ClientRectObject,
   Offsets,
   PositioningStrategy,
   Rect,
-} from '../types'
+} from '../types/types'
 import type { Placement } from '../enums'
-import getBasePlacement from './getBasePlacement.js'
-import getVariation from './getVariation.js'
-import getMainAxisFromPlacement from './getMainAxisFromPlacement.js'
+import getBasePlacement from './getBasePlacement'
+import getVariation from './getVariation'
+import getMainAxisFromPlacement from './getMainAxisFromPlacement'
 
 export default function computeOffsets({
   reference,

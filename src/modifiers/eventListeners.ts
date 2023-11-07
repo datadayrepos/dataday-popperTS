@@ -1,6 +1,6 @@
 import getWindow from '../dom-utils/getWindow'
 
-import type { Modifier, ModifierArguments } from '../types'
+import type { Modifier, ModifierArguments } from '../types/types'
 
 export interface Options {
   scroll: boolean

@@ -1,5 +1,5 @@
-import { bottom, left, right, top } from '../enums.js'
-import detectOverflow from '../utils/detectOverflow.js'
+import { bottom, left, right, top } from '../enums'
+import detectOverflow from '../utils/detectOverflow'
 
 import type {
   Modifier,
@@ -7,7 +7,8 @@ import type {
   Offsets,
   Rect,
   SideObject,
-} from '../types'
+  State,
+} from '../types/types'
 
 function getSideOffsets(
   overflow: SideObject,
@@ -28,7 +29,7 @@ function isAnySideFullyClipped(overflow: SideObject): boolean {
   })
 }
 
-function hide({ state, name }: ModifierArguments<object>) {
+function hide({ state, name }: ModifierArguments<State>) {
   const referenceRect = state.rects.reference
   const popperRect = state.rects.popper
   const preventedOffsets = state.modifiersData.preventOverflow

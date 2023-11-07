@@ -1,4 +1,4 @@
-import type { Window } from '../types'
+import type { Window } from '../types/types'
 import getWindow from './getWindow'
 
 export default function getWindowScroll(node: Node | Window): {

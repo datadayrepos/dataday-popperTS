@@ -44,7 +44,6 @@ export const variationPlacements: Array<VariationPlacement>
   acc: Array<VariationPlacement>,
   placement: BasePlacement,
 ) => {
-  // @ts-expect-error
   return acc.concat([
     `${placement}-${start}`,
     `${placement}-${end}`,
@@ -56,7 +55,6 @@ export const placements: Array<Placement> = [...basePlacements, auto].reduce(
     acc: Array<Placement>,
     placement: BasePlacement | typeof auto,
   ): Array<Placement> =>
-  // @ts-expect-error
     acc.concat([placement, `${placement}-${start}`, `${placement}-${end}`]),
   [],
 )

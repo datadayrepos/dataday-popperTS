@@ -1,17 +1,17 @@
-import getCompositeRect from './dom-utils/getCompositeRect.js'
-import getLayoutRect from './dom-utils/getLayoutRect.js'
-import listScrollParents from './dom-utils/listScrollParents.js'
-import getOffsetParent from './dom-utils/getOffsetParent.js'
-import getComputedStyle from './dom-utils/getComputedStyle.js'
-import orderModifiers from './utils/orderModifiers.js'
-import debounce from './utils/debounce.js'
-import validateModifiers from './utils/validateModifiers.js'
-import uniqueBy from './utils/uniqueBy.js'
-import getBasePlacement from './utils/getBasePlacement.js'
-import mergeByName from './utils/mergeByName.js'
-import detectOverflow from './utils/detectOverflow.js'
-import { isElement } from './dom-utils/instanceOf.js'
-import { auto } from './enums.js'
+import getCompositeRect from './dom-utils/getCompositeRect'
+import getLayoutRect from './dom-utils/getLayoutRect'
+import listScrollParents from './dom-utils/listScrollParents'
+import getOffsetParent from './dom-utils/getOffsetParent'
+import getComputedStyle from './dom-utils/getComputedStyle'
+import orderModifiers from './utils/orderModifiers'
+import debounce from './utils/debounce'
+import validateModifiers from './utils/validateModifiers'
+import uniqueBy from './utils/uniqueBy'
+import getBasePlacement from './utils/getBasePlacement'
+import mergeByName from './utils/mergeByName'
+import detectOverflow from './utils/detectOverflow'
+import { isElement } from './dom-utils/instanceOf'
+import { auto } from './enums'
 
 import type {
   Instance,
@@ -19,7 +19,7 @@ import type {
   OptionsGeneric,
   State,
   VirtualElement,
-} from './types'
+} from './types/types'
 
 interface PopperGeneratorArgs {
   defaultModifiers?: Array<Modifier<any, any>>
@@ -97,10 +97,10 @@ export function popperGenerator(generatorOptions: PopperGeneratorArgs = {}) {
         } // Store the reference and popper rects to be read by modifiers
 
         state.rects = {
-          popper: getLayoutRect(popper),
+          popper: getLayoutRect(popper as HTMLElement),
           reference: getCompositeRect(
-            reference,
-            getOffsetParent(popper),
+            reference as Element,
+            getOffsetParent(popper as HTMLElement),
             state.options?.strategy === 'fixed',
           ),
         }
@@ -117,18 +117,20 @@ export function popperGenerator(generatorOptions: PopperGeneratorArgs = {}) {
         // is filled with the initial data specified by the modifier. This means
         // it doesn't persist and is fresh on each update.
         // To ensure persistent data, use `${name}#persistent`
-        state.orderedModifiers?.forEach(
-          modifier =>
-            (state.modifiersData[modifier.name] = {
-              ...modifier.data,
-            }),
-        )
+        state.orderedModifiers?.forEach((modifier) => {
+          if (!state.modifiersData)
+            state.modifiersData = {} // Initialize if undefined
+
+          state.modifiersData[modifier.name] = {
+            ...modifier.data,
+          }
+        })
 
         let __debug_loops__ = 0
 
         for (
           let index = 0;
-          index < state.orderedModifiers.length;
+          index < (state.orderedModifiers?.length ?? 0);
           index++
         ) {
           if (process.env.NODE_ENV !== 'production') {
@@ -146,17 +148,13 @@ export function popperGenerator(generatorOptions: PopperGeneratorArgs = {}) {
             continue
           }
 
-          const {
-            fn,
-            options = {},
-            name,
-          } = state.orderedModifiers[index]
+          const { fn, options = {}, name } = state.orderedModifiers?.[index] ?? {}
 
           if (typeof fn === 'function')
-            state = fn({ instance, name, options, state }) || state
+            state = fn({ instance, name, options, state }) as Partial<State> || state
         }
       },
-      setOptions: function setOptions(setOptionsAction) {
+      setOptions: function setOptions(setOptionsAction: (arg0: OptionsGeneric<any> | undefined) => any) {
         const options
           = typeof setOptionsAction === 'function'
             ? setOptionsAction(state.options)
@@ -182,11 +180,14 @@ export function popperGenerator(generatorOptions: PopperGeneratorArgs = {}) {
 
         // Orders the modifiers based on their dependencies and `phase`
         // properties
+        // Ensure that all modifiers have a 'name' property before merging
+        const allModifiers = [
+          ...defaultModifiers,
+          ...(state.options?.modifiers ?? []).filter(modifier => 'name' in modifier),
+        ]
+
         const orderedModifiers = orderModifiers(
-          mergeByName([
-            ...defaultModifiers,
-            ...state.options.modifiers,
-          ]),
+          mergeByName(allModifiers) as Modifier<any, any>[],
         )
 
         // Strip out disabled modifiers
@@ -198,12 +199,12 @@ export function popperGenerator(generatorOptions: PopperGeneratorArgs = {}) {
         // if one of the modifiers is invalid for any reason
         if (process.env.NODE_ENV !== 'production') {
           const modifiers = uniqueBy(
-            [...orderedModifiers, ...state.options.modifiers],
+            [...orderedModifiers, ...(state.options?.modifiers || [])], // Fallback to an empty array if modifiers are undefined
             ({ name }) => name,
           )
           validateModifiers(modifiers)
 
-          if (getBasePlacement(state.options.placement) === auto) {
+          if (getBasePlacement(state.options?.placement || 'bottom') === 'auto') { // 'bottom' is just an example default
             const flipModifier = state.orderedModifiers.find(
               (_ref2) => {
                 const name = _ref2.name

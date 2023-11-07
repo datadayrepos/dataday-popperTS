@@ -1,6 +1,6 @@
-import getClippingRect from '../dom-utils/getClippingRect.js'
-import getDocumentElement from '../dom-utils/getDocumentElement.js'
-import getBoundingClientRect from '../dom-utils/getBoundingClientRect.js'
+import getClippingRect from '../dom-utils/getClippingRect'
+import getDocumentElement from '../dom-utils/getDocumentElement'
+import getBoundingClientRect from '../dom-utils/getBoundingClientRect'
 import {
   basePlacements,
   bottom,
@@ -10,14 +10,27 @@ import {
   right,
   top,
   viewport,
-} from '../enums.js'
-import { isElement } from '../dom-utils/instanceOf.js'
-import computeOffsets from './computeOffsets.js'
-import rectToClientRect from './rectToClientRect.js'
-import mergePaddingObject from './mergePaddingObject.js'
-import expandToHashMap from './expandToHashMap.js'
+} from '../enums'
+import type { Boundary, Context, Placement, RootBoundary } from '../enums'
 
-export default function detectOverflow(state, options = {}) {
+import { isElement } from '../dom-utils/instanceOf'
+import type { Padding, State } from '../types/types'
+import computeOffsets from './computeOffsets'
+import rectToClientRect from './rectToClientRect'
+import mergePaddingObject from './mergePaddingObject'
+import expandToHashMap from './expandToHashMap'
+
+interface DetectOverflowOptions {
+  placement?: Placement
+  strategy?: string
+  boundary?: Boundary
+  rootBoundary?: RootBoundary
+  elementContext?: Context
+  altBoundary?: boolean
+  padding?: number | Padding // Assuming PaddingObject is a type that you have defined
+}
+
+export default function detectOverflow(state: State, options: DetectOverflowOptions = {}) {
   const _options = options
   const _options$placement = _options.placement
   const placement
@@ -83,11 +96,24 @@ export default function detectOverflow(state, options = {}) {
 
   if (elementContext === popper && offsetData) {
     const offset = offsetData[placement]
-    Object.keys(overflowOffsets).forEach((key) => {
-      const multiply = [right, bottom].includes(key) ? 1 : -1
-      const axis = [top, bottom].includes(key) ? 'y' : 'x'
-      overflowOffsets[key] += offset[axis] * multiply
-    })
+    if (offset) { // Check if offset is not undefined
+      Object.keys(overflowOffsets).forEach((key) => {
+        const side: 'top' | 'left' | 'right' | 'bottom' = key as 'top' | 'left' | 'right' | 'bottom'
+
+        if (side === 'right' || side === 'bottom') {
+          // side is now narrowed to "right" | "bottom"
+          const multiply = 1
+          const axis = side === 'bottom' ? 'y' : 'x'
+          overflowOffsets[side] += offset[axis] * multiply
+        }
+        else {
+          // side is "top" | "left"
+          const multiply = -1
+          const axis = side === 'top' ? 'y' : 'x'
+          overflowOffsets[side] += offset[axis] * multiply
+        }
+      })
+    }
   }
 
   return overflowOffsets

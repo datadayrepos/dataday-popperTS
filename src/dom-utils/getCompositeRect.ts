@@ -1,4 +1,4 @@
-import type { Rect, VirtualElement, Window } from '../types'
+import type { Rect, VirtualElement, Window } from '../types/types'
 import getBoundingClientRect from './getBoundingClientRect'
 import getNodeScroll from './getNodeScroll'
 import getNodeName from './getNodeName'

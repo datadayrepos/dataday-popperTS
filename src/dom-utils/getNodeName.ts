@@ -1,4 +1,4 @@
-import type { Window } from '../types'
+import type { Window } from '../types/types'
 import { isNode } from './instanceOf'
 
 export default function getNodeName(

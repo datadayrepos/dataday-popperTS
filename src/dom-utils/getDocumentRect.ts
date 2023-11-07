@@ -1,5 +1,5 @@
 import { max } from '../utils/math' // Gets the entire size of the scrollable document area, even extending outside
-import type { Rect } from '../types'
+import type { Rect } from '../types/types'
 import getDocumentElement from './getDocumentElement'
 import getComputedStyle from './getComputedStyle'
 import getWindowScrollBarX from './getWindowScrollBarX'

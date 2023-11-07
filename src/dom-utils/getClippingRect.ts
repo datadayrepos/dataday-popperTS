@@ -1,7 +1,7 @@
 import { viewport } from '../enums'
 import rectToClientRect from '../utils/rectToClientRect'
 import { max, min } from '../utils/math'
-import type { ClientRectObject, PositioningStrategy } from '../types'
+import type { ClientRectObject, PositioningStrategy } from '../types/types'
 import type { Boundary, RootBoundary } from '../enums'
 import getViewportRect from './getViewportRect'
 import getDocumentRect from './getDocumentRect'

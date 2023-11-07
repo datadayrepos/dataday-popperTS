@@ -1,15 +1,14 @@
-import getBasePlacement from '../utils/getBasePlacement.js'
-import getLayoutRect from '../dom-utils/getLayoutRect.js'
-import contains from '../dom-utils/contains.js'
-import getOffsetParent from '../dom-utils/getOffsetParent.js'
-import getMainAxisFromPlacement from '../utils/getMainAxisFromPlacement.js'
-import { within } from '../utils/within.js'
-import mergePaddingObject from '../utils/mergePaddingObject.js'
-import expandToHashMap from '../utils/expandToHashMap.js'
-import { basePlacements, bottom, left, right, top } from '../enums.js'
-import { isHTMLElement } from '../dom-utils/instanceOf.js'
+import getBasePlacement from '../utils/getBasePlacement'
+import getLayoutRect from '../dom-utils/getLayoutRect'
+import contains from '../dom-utils/contains'
+import getOffsetParent from '../dom-utils/getOffsetParent'
+import getMainAxisFromPlacement from '../utils/getMainAxisFromPlacement'
+import { within } from '../utils/within'
+import mergePaddingObject from '../utils/mergePaddingObject'
+import expandToHashMap from '../utils/expandToHashMap'
+import { basePlacements, bottom, left, right, top } from '../enums'
 
-import type { Modifier, ModifierArguments, Padding, Rect } from '../types'
+import type { Modifier, ModifierArguments, Padding, Rect, State } from '../types/types'
 import type { Placement } from '../enums'
 
 export declare interface Options {
@@ -23,15 +22,20 @@ export declare interface Options {
   }) => Padding)
 }
 
-const toPaddingObject = function toPaddingObject(padding, state) {
-  padding
-    = typeof padding === 'function'
-      ? padding(
-        Object.assign({}, state.rects, {
-          placement: state.placement,
-        }),
-      )
-      : padding
+const toPaddingObject = function toPaddingObject(
+  padding: Options['padding'] | undefined,
+  state: State,
+) {
+  if (padding === undefined) {
+    // Return a default padding object if padding is undefined
+    return expandToHashMap(0, basePlacements) // or any other default you wish to use
+  }
+
+  // Rest of your logic remains the same
+  padding = typeof padding === 'function'
+    ? padding(Object.assign({}, state.rects, { placement: state.placement }))
+    : padding
+
   return mergePaddingObject(
     typeof padding !== 'number'
       ? padding
@@ -39,14 +43,20 @@ const toPaddingObject = function toPaddingObject(padding, state) {
   )
 }
 
+interface ModifiersData {
+  [key: string]: any // Here you can use any or a more specific type depending on what offset and centerOffset are.
+}
+
 function arrow({ state, name, options }: ModifierArguments<Options>) {
-  let _state$modifiersData$
+  // Use ModifiersData type for _state$modifiersData$ instead of an empty object
+  let _state$modifiersData$: ModifiersData = {}
 
   const arrowElement = state.elements.arrow
   const popperOffsets = state.modifiersData.popperOffsets
   const basePlacement = getBasePlacement(state.placement)
   const axis = getMainAxisFromPlacement(basePlacement)
-  const isVertical = [left, right].includes(basePlacement)
+
+  const isVertical = basePlacement === 'left' || basePlacement === 'right'
   const len = isVertical ? 'height' : 'width'
 
   if (!arrowElement || !popperOffsets)
@@ -91,22 +101,21 @@ function effect({ state, options }: ModifierArguments<Options>) {
 
   // CSS selector
   if (typeof arrowElement === 'string') {
-    arrowElement = state.elements.popper.querySelector(arrowElement)
+    const queriedElement = state.elements.popper.querySelector(arrowElement)
 
-    if (!arrowElement)
+    if (!queriedElement)
       return
-  }
 
-  if (process.env.NODE_ENV !== 'production') {
-    if (!isHTMLElement(arrowElement)) {
-      console.error(
-        [
-          'Popper: "arrow" element must be an HTMLElement (not an SVGElement).',
-          'To use an SVG arrow, wrap it in an HTMLElement that will be used as',
-          'the arrow.',
-        ].join(' '),
-      )
+    if (!(queriedElement instanceof HTMLElement)) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.error(
+          'Popper: "arrow" element must be an HTMLElement (not an SVGElement or other type of element).',
+        )
+      }
+      return
     }
+
+    arrowElement = queriedElement
   }
 
   if (!contains(state.elements.popper, arrowElement)) {
@@ -124,7 +133,9 @@ function effect({ state, options }: ModifierArguments<Options>) {
 
   state.elements.arrow = arrowElement
 }
+
 export type ArrowModifier = Modifier<'arrow', Options>
+
 export default {
   effect,
   enabled: true,

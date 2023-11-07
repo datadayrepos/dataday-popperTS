@@ -1,5 +1,5 @@
-import { VisualViewport } from '../types'
-import type { Window } from '../types'
+import { VisualViewport } from '../types/types'
+import type { Window } from '../types/types'
 import getScrollParent from './getScrollParent'
 import getParentNode from './getParentNode'
 import getWindow from './getWindow'

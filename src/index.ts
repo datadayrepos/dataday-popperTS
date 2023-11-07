@@ -1,6 +1,5 @@
 // @popperjs/core 2.11.6 https://www.npmjs.com/package/@popperjs/core?activeTab=explore
-export * from './enums'
-export * from './modifiers/index'
+// export * from './modifiers/index'
 
 export {
   popperGenerator,
@@ -10,11 +9,12 @@ export {
 
 export { createPopper } from './popper'
 
+export type { Placement } from './enums'
+
 export type {
   Instance,
   Modifier,
   Options,
   State,
   VirtualElement,
-} from './types'
-// export { createPopper as createPopperLite } from "./popper-lite.js";
+} from './types/types'

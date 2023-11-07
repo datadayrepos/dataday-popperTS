@@ -1,5 +1,5 @@
-import { modifierPhases } from '../enums.js'
-import format from './format.js'
+import { modifierPhases } from '../enums'
+import format from './format'
 
 const INVALID_MODIFIER_ERROR
   = 'Popper: modifier "%s" provided an invalid %s property, expected %s but got %s'
@@ -133,7 +133,7 @@ export default function validateModifiers(modifiers: Array<any>): void {
         }
 
         modifier.requires
-          && modifier.requires.forEach((requirement) => {
+          && modifier.requires.forEach((requirement: string) => {
             if (modifiers.find(mod => mod.name === requirement) == null) {
               console.error(
                 format(
