@@ -8,7 +8,7 @@ export {
 } from './createPopper'
 
 export { createPopper } from './popper'
-
+export { placements } from './enums'
 export type { Placement } from './enums'
 
 export type {
