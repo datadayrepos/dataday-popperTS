@@ -1,6 +1,5 @@
 // @popperjs/core 2.11.6 https://www.npmjs.com/package/@popperjs/core?activeTab=explore
-// export * from './modifiers/index'
-
+//
 export {
   popperGenerator,
   detectOverflow,
