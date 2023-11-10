@@ -10,15 +10,12 @@ import getVariation from '../utils/getVariation'
 import getFreshSideObject from '../utils/getFreshSideObject'
 import { max as mathMax, min as mathMin } from '../utils/math'
 
-import type { Boundary, RootBoundary } from '../enums'
-import type { Modifier, ModifierArguments, Padding } from '../types/types'
+import type { Boundary, Placement, RootBoundary } from '../enums'
+import type { Modifier, ModifierArguments, Padding, Rect } from '../types/types'
 
+// Assuming Rect and Placement are types
 type TetherOffset =
-  | (({
-    popper: Rect,
-    reference: Rect,
-    placement: Placement,
-  }) => number | { mainAxis: number; altAxis: number })
+  | ((args: { popper: Rect; reference: Rect; placement: Placement }) => number | { mainAxis: number; altAxis: number })
   | number
   | { mainAxis: number; altAxis: number }
 
@@ -147,25 +144,25 @@ function preventOverflow({ state, options, name }: ModifierArguments<Options>) {
 
     const minOffset = isBasePlacement
       ? referenceRect[len] / 2
-        - additive
-        - arrowLen
-        - arrowPaddingMin
-        - normalizedTetherOffsetValue.mainAxis
+      - additive
+      - arrowLen
+      - arrowPaddingMin
+      - normalizedTetherOffsetValue.mainAxis
       : minLen
-        - arrowLen
-        - arrowPaddingMin
-        - normalizedTetherOffsetValue.mainAxis
+      - arrowLen
+      - arrowPaddingMin
+      - normalizedTetherOffsetValue.mainAxis
 
     const maxOffset = isBasePlacement
       ? -referenceRect[len] / 2
-        + additive
-        + arrowLen
-        + arrowPaddingMax
-        + normalizedTetherOffsetValue.mainAxis
+      + additive
+      + arrowLen
+      + arrowPaddingMax
+      + normalizedTetherOffsetValue.mainAxis
       : maxLen
-        + arrowLen
-        + arrowPaddingMax
-        + normalizedTetherOffsetValue.mainAxis
+      + arrowLen
+      + arrowPaddingMax
+      + normalizedTetherOffsetValue.mainAxis
 
     const arrowOffsetParent
       = state.elements.arrow && getOffsetParent(state.elements.arrow)
@@ -199,24 +196,24 @@ function preventOverflow({ state, options, name }: ModifierArguments<Options>) {
     const min = offset + overflow[mainSide]
     const max = offset - overflow[altSide]
 
-    const isOriginSide = [top, left].includes(basePlacement)
+    const isOriginSide: boolean = basePlacement === 'top' || basePlacement === 'left'
 
     const offsetModifierValue = offsetModifierState?.[altAxis] ?? 0
 
     const tetherMin = isOriginSide
       ? min
       : offset
-        - referenceRect[len]
-        - popperRect[len]
-        - offsetModifierValue
-        + normalizedTetherOffsetValue.altAxis
+      - referenceRect[len]
+      - popperRect[len]
+      - offsetModifierValue
+      + normalizedTetherOffsetValue.altAxis
 
     const tetherMax = isOriginSide
       ? offset
-        + referenceRect[len]
-        + popperRect[len]
-        - offsetModifierValue
-        - normalizedTetherOffsetValue.altAxis
+      + referenceRect[len]
+      + popperRect[len]
+      - offsetModifierValue
+      - normalizedTetherOffsetValue.altAxis
       : max
 
     const preventedOffset

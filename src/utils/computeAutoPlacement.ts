@@ -70,15 +70,18 @@ export default function computeAutoPlacement(
 
   // Explicitly define the type of the accumulator
   const overflows: OverflowsMap = allowedPlacements.reduce((acc: OverflowsMap, placement) => {
-    acc[placement as ComputedPlacement] = detectOverflow(state, {
-    // assert placement as ComputedPlacement if needed
-      boundary,
-      padding,
-      placement,
-      rootBoundary,
-    })[getBasePlacement(placement)]
+    const basePlacement = getBasePlacement(placement)
+    if (basePlacement in acc) {
+      // @ts-expect-error unresolved
+      acc[basePlacement as keyof OverflowsMap] = detectOverflow(state, {
+        boundary,
+        padding,
+        placement,
+        rootBoundary,
+      })[basePlacement]
+    }
     return acc
-  }, {} as OverflowsMap) // type assertion here
+  }, {} as OverflowsMap)
 
   return Object.keys(overflows)
     .sort((a, b) => overflows[a as ComputedPlacement] - overflows[b as ComputedPlacement])

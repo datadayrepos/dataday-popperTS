@@ -1,5 +1,5 @@
-import { VisualViewport } from '../types/types'
-import type { Window } from '../types/types'
+// eslint-disable-next-line ts/consistent-type-imports
+import type { VisualViewport, Window } from '../types/types'
 import getScrollParent from './getScrollParent'
 import getParentNode from './getParentNode'
 import getWindow from './getWindow'
@@ -31,15 +31,12 @@ export default function listScrollParents(
 ): Array<Element | Window> {
   let _element$ownerDocumen
 
-  if (list === void 0)
+  if (list === undefined)
     list = []
 
   const scrollParent = getScrollParent(element)
-  const isBody
-        = scrollParent
-        === ((_element$ownerDocumen = element.ownerDocument) == null
-          ? void 0
-          : _element$ownerDocumen.body)
+  const ownerDocument = element.ownerDocument
+  const isBody = scrollParent === (ownerDocument ? ownerDocument.body : undefined)
 
   const win = getWindow(scrollParent)
   const target: Node | ShadowRoot | Array<Element | Window | VisualViewport>

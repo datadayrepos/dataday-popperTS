@@ -1,7 +1,7 @@
 {
   "name": "@datadayrepos/popperts",
   "type": "module",
-  "version": "0.0.1-beta.21",
+  "version": "0.0.1-beta.22",
   "private": false,
   "packageManager": "pnpm@8.9.0",
   "description": "TS port of good old popper, also internalized all external dependencies",
@@ -25,12 +25,11 @@
   "exports": {
     ".": {
       "types": "./dist/types/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
+      "import": "./dist/index.js"
+
     }
   },
-  "main": "./dist/index.mjs",
-  "module": "./dist/index.mjs",
+  "module": "./dist/index.js",
   "types": "./dist/types/index.d.ts",
   "files": [
     "dist",
@@ -42,7 +41,7 @@
     "release": "bumpp -r && pnpm -r publish",
     "test": "echo \"Error: no test specified\" && exit 1",
     "typecheck": "tsc --noEmit",
-    "build": "tsc",
+    "build": "vite build && tsc --emitDeclarationOnly",
     "pub": "npm publish --access public"
   },
   "devDependencies": {
