@@ -26,7 +26,6 @@
     ".": {
       "types": "./dist/types/index.d.ts",
       "import": "./dist/index.js"
-
     }
   },
   "module": "./dist/index.js",
@@ -38,11 +37,14 @@
   "scripts": {
     "lint": "eslint --cache .",
     "lint:fix": "eslint . --fix",
-    "release": "bumpp -r && pnpm -r publish",
+    "release": "bumpp -r && pnpm run pack:release && pnpm run pub",
     "test": "echo \"Error: no test specified\" && exit 1",
     "typecheck": "tsc --noEmit",
     "build": "vite build && tsc --emitDeclarationOnly",
-    "pub": "npm publish --access public"
+    "pub": "node scripts/npm-package.mjs publish --access=public",
+    "prepack": "node scripts/npm-package.mjs guard",
+    "prepublishOnly": "node scripts/npm-package.mjs guard",
+    "pack:release": "node scripts/npm-package.mjs pack"
   },
   "devDependencies": {
     "@datadayrepos/eslint-config": "^1.0.1-beta.11",

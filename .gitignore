@@ -13,3 +13,6 @@ types
 coverage
 .eslintcache
 .vitepress/cache
+
+# Verified npm archives, never commit.
+.npm-package/
