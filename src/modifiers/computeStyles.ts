@@ -1,4 +1,4 @@
-import type { BasePlacement, Placement, Variation } from '../enums'
+import type { BasePlacement, Variation } from '../enums'
 import { bottom, end, left, right, top } from '../enums'
 import getOffsetParent from '../dom-utils/getOffsetParent'
 import getWindow from '../dom-utils/getWindow'

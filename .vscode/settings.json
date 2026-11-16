@@ -1,5 +1,5 @@
 {
-
+  "vite.autoStart": false,
   "typescript.tsdk": "node_modules/typescript/lib",
 
   // Enable the flat config support

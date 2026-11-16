@@ -11,7 +11,6 @@ import getBasePlacement from './utils/getBasePlacement'
 import mergeByName from './utils/mergeByName'
 import detectOverflow from './utils/detectOverflow'
 import { isElement } from './dom-utils/instanceOf'
-import { auto } from './enums'
 
 import type {
   Instance,
@@ -69,7 +68,7 @@ export function popperGenerator(generatorOptions: PopperGeneratorArgs = {}) {
     let effectCleanupFns: Array<() => void> = []
     let isDestroyed = false
 
-    const instance = {
+    const instance: Instance = {
       destroy: function destroy() {
         cleanupModifierEffects()
         isDestroyed = true
@@ -151,13 +150,13 @@ export function popperGenerator(generatorOptions: PopperGeneratorArgs = {}) {
           const { fn, options = {}, name } = state.orderedModifiers?.[index] ?? {}
 
           if (typeof fn === 'function')
-            state = fn({ instance, name, options, state }) as Partial<State> || state
+            state = fn({ instance, name, options, state: state as State }) as Partial<State> || state
         }
       },
-      setOptions: function setOptions(setOptionsAction: (arg0: OptionsGeneric<any> | undefined) => any) {
+      setOptions: function setOptions(setOptionsAction) {
         const options
           = typeof setOptionsAction === 'function'
-            ? setOptionsAction(state.options)
+            ? setOptionsAction(state.options!)
             : setOptionsAction
 
         cleanupModifierEffects()
@@ -250,17 +249,19 @@ export function popperGenerator(generatorOptions: PopperGeneratorArgs = {}) {
         runModifierEffects()
         return instance.update()
       },
-      state,
+      // The public Instance contract exposes State while initialization is phased.
+      state: state as State,
 
       // Async and optimistically optimized update – it will not be executed if
       // not necessary (debounced to run at most once-per-tick)
 
+      // Promise resolution flattens the callback's promise at runtime.
       update: debounce(() => {
-        return new Promise((resolve) => {
+        return new Promise<Partial<State>>((resolve) => {
           instance.forceUpdate()
           resolve(state)
         })
-      }),
+      }) as Instance['update'],
     }
 
     if (!areValidElements(reference, popper)) {
@@ -291,7 +292,7 @@ export function popperGenerator(generatorOptions: PopperGeneratorArgs = {}) {
             instance,
             name,
             options,
-            state,
+            state: state as State,
           })
 
           const noopFn = function noopFn() { }

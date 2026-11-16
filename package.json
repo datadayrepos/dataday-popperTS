@@ -1,7 +1,7 @@
 {
   "name": "@datadayrepos/popperts",
   "type": "module",
-  "version": "0.0.1-beta.22",
+  "version": "0.0.2",
   "private": false,
   "packageManager": "pnpm@8.9.0",
   "description": "TS port of good old popper, also internalized all external dependencies",
@@ -48,8 +48,7 @@
   },
   "devDependencies": {
     "@datadayrepos/eslint-config": "^1.0.1-beta.11",
-    "@datadayrepos/eslint-plugin-datadayrepos": "1.0.0-Beta12",
-    "@datadayrepos/ni": "^0.21.8",
+    "@datadayrepos/eslint-plugin-datadayrepos": "1.0.0-Beta13",
     "@types/node": "^20.8.3",
     "eslint": "^8.51.0",
     "eslint-plugin-sort-keys": "^2.3.5",
@@ -57,6 +56,7 @@
     "lint-staged": "^14.0.1",
     "pnpm": "^8.8.0",
     "rimraf": "^5.0.5",
+    "semver": "7.7.4",
     "simple-git-hooks": "^2.9.0",
     "typescript": "^5.2.2",
     "unbuild": "^2.0.0",

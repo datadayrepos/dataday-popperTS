@@ -8,14 +8,13 @@ import getWindowScroll from './getWindowScroll'
 // of the `<html>` and `<body>` rect bounds if horizontally scrollable
 
 export default function getDocumentRect(element: HTMLElement): Rect {
-  let _element$ownerDocumen
-
   const html = getDocumentElement(element)
   const winScroll = getWindowScroll(element)
+  const ownerDocument = element.ownerDocument
   const body
-        = (_element$ownerDocumen = element.ownerDocument) == null
-          ? void 0
-          : _element$ownerDocumen.body
+        = ownerDocument == null
+          ? undefined
+          : ownerDocument.body
   const width = max(
     html.scrollWidth,
     html.clientWidth,

@@ -3,18 +3,15 @@ import getDocumentElement from '../dom-utils/getDocumentElement'
 import getBoundingClientRect from '../dom-utils/getBoundingClientRect'
 import {
   basePlacements,
-  bottom,
   clippingParents,
   popper,
   reference,
-  right,
-  top,
   viewport,
 } from '../enums'
 import type { Boundary, Context, Placement, RootBoundary } from '../enums'
 
 import { isElement } from '../dom-utils/instanceOf'
-import type { Padding, State } from '../types/types'
+import type { Padding, PositioningStrategy, State } from '../types/types'
 import computeOffsets from './computeOffsets'
 import rectToClientRect from './rectToClientRect'
 import mergePaddingObject from './mergePaddingObject'
@@ -66,7 +63,7 @@ export default function detectOverflow(state: State, options: DetectOverflowOpti
       : element.contextElement || getDocumentElement(state.elements.popper),
     boundary,
     rootBoundary,
-    strategy,
+    strategy as PositioningStrategy,
   )
   const referenceClientRect = getBoundingClientRect(state.elements.reference)
   const popperOffsets = computeOffsets({

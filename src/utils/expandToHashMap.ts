@@ -7,8 +7,7 @@ export default function expandToHashMap<
 ): {
     [key: string]: T
   } {
-  return keys.reduce((hashMap, key) => {
-    // @ts-expect-error
+  return keys.reduce<Record<string, T>>((hashMap, key) => {
     hashMap[key] = value
     return hashMap
   }, {})

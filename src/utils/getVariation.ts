@@ -3,5 +3,5 @@ import type { Placement, Variation } from '../enums'
 export default function getVariation(
   placement: Placement,
 ): Variation | null | undefined {
-  return placement.split('-')[1]
+  return placement.split('-')[1] as Variation | undefined
 }

@@ -1,4 +1,4 @@
-import type { BasePlacement, Placement } from '../enums'
+import type { Placement } from '../enums'
 
 // const validBasePlacements: BasePlacement[] = ['top', 'bottom', 'right', 'left']
 

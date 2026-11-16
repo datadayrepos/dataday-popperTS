@@ -1,7 +1,7 @@
 import getNodeName from '../dom-utils/getNodeName'
 import { isHTMLElement } from '../dom-utils/instanceOf'
 
-import type { Modifier, ModifierArguments, State, VirtualElement } from '../types/types'
+import type { Modifier, ModifierArguments, State } from '../types/types'
 
 // This modifier takes the styles prepared by the `computeStyles` modifier
 // and applies them to the HTMLElements such as popper and arrow
